@@ -18,7 +18,7 @@ const machineHistory = async (req, resp) => {
       `machine = ${machine} && createdAt BETWEEN '${from}' AND '${to}'`
     );
 
-    const att = attendance.filter((i) => {
+    let att = attendance.filter((i) => {
       return new Date(i.createdAt).getDate() == endDate.getDate();
     });
 
