@@ -1,4 +1,5 @@
 const { getData } = require("../../functions/db");
+const { authenticate } = require("../../functions/token");
 
 const attendance = async (req, resp) => {
   try {
@@ -9,10 +10,12 @@ const attendance = async (req, resp) => {
     endDate = endDate.setDate(endDate.getDate() + 1);
     endDate = new Date(endDate).toISOString().split("T")[0];
 
+    const admin = await authenticate(req, resp);
+
     const data = await getData(
       null,
       "attendence",
-      `createdAt BETWEEN '${startDate}' AND '${endDate}'`,
+      `admin = ${admin} && (createdAt BETWEEN '${startDate}' AND '${endDate}')`,
       null,
       null,
       "createdAt"
