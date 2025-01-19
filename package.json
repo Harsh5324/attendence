@@ -1,0 +1,22 @@
+{
+  "name": "employees",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.65",
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "harsh-uid": "^1.4.0",
+    "jsonwebtoken": "^9.0.2",
+    "lodash.groupby": "^4.6.0",
+    "moment": "^2.30.1",
+    "mysql2": "^3.12.0"
+  },
+  "scripts": {
+    "dev": "npx nodemon start",
+    "start": "sudo pm2 start"
+  }
+}
