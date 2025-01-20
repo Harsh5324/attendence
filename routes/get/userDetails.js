@@ -68,7 +68,7 @@ const userDetails = async (req, resp) => {
       .fill({ active: false })
       .map((item, index) => {
         const att = attendance.filter(
-          (i) => new Date(i.createdAt).getDate() == index + 1 && i.shift == 0
+          (i) => new Date(i.createdAt).getDate() == index + 1
         );
 
         const machines = att.length;
