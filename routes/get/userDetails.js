@@ -27,7 +27,14 @@ const userDetails = async (req, resp) => {
       `employee = ${id} && createdAt BETWEEN '${from}' AND '${to}'`
     );
 
-    let advance = await getData(null, "advance", `user = ${id}`);
+    let advance = await getData(
+      null,
+      "advance",
+      `user = ${id}`,
+      null,
+      null,
+      "createdAt"
+    );
 
     let att = attendance.filter((i) => {
       return new Date(i.createdAt).getDate() == endDate.getDate();
