@@ -16,6 +16,7 @@ const adminLogin = async (req, resp) => {
         "y7Rm8QHK9CbkDsFPdrlfNjVvA4gOUzq6iT2pu0aIWohMcJB3GZrRB5fvz1eZqWG0Ynwkoiy4XDS9QdF3";
 
       const otp = Math.floor(1000 + Math.random() * 9000);
+      console.log("🚀 ~ file: adminLogin.js:19 ~ adminLogin ~ otp:", otp);
 
       const {
         data: { return: status, message },
