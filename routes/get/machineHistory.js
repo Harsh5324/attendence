@@ -12,11 +12,16 @@ const machineHistory = async (req, resp) => {
     to = to.setDate(to.getDate() + 1);
     to = new Date(to).toISOString().split("T")[0];
 
-    const attendance = await getData(
+    let attendance = await getData(
       null,
       "attendence",
       `machine = ${machine} && createdAt BETWEEN '${from}' AND '${to}'`
     );
+
+    // attendance = attendance.map((item) => ({
+    //   ...item,
+    //   date: moment(item.createdAt).format('DD/MM/YYYY')
+    // }))
 
     let att = attendance.filter((i) => {
       return new Date(i.createdAt).getDate() == endDate.getDate();
@@ -56,8 +61,19 @@ const machineHistory = async (req, resp) => {
     const data = Array(endDate.getDate() - 1)
       .fill({ active: false })
       .map((item, index) => {
-        const machines = new Date(i.createdAt).getDate() == index + 1;
-        return { date: index + 1, machines };
+        const isActive =
+          attendance.some(
+            (i) => new Date(i.createdAt).getDate() == index + 1 && i.shift == 0
+          ) ||
+          attendance.some(
+            (i) => new Date(i.createdAt).getDate() == index + 1 && i.shift == 1
+          );
+
+        const machines = attendance.filter(
+          (i) => new Date(i.createdAt).getDate() == index + 1
+        );
+
+        return { machines, date: index + 1 };
       });
 
     resp.suc({ history: data, attendance: att });
