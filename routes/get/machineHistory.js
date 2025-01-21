@@ -56,15 +56,8 @@ const machineHistory = async (req, resp) => {
     const data = Array(endDate.getDate() - 1)
       .fill({ active: false })
       .map((item, index) => {
-        const isActive =
-          attendance.some(
-            (i) => new Date(i.createdAt).getDate() == index + 1 && i.shift == 0
-          ) ||
-          attendance.some(
-            (i) => new Date(i.createdAt).getDate() == index + 1 && i.shift == 1
-          );
-
-        return { isActive, date: index + 1 };
+        const machines = new Date(i.createdAt).getDate() == index + 1;
+        return { date: index + 1, machines };
       });
 
     resp.suc({ history: data, attendance: att });
