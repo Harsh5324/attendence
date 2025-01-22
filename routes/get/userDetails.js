@@ -121,8 +121,6 @@ const userDetails = async (req, resp) => {
         userSpecificSingleSalary = parseFloat(
           JSON.parse(attendance.salary).singleMachineSalary
         );
-
-        console.log({ userSpecificDubleSalary, userSpecificSingleSalary });
       });
 
       const hasDoubleAttendance = Object.values(attendanceByDate).some(
@@ -149,9 +147,7 @@ const userDetails = async (req, resp) => {
         : hasDoubleAttendance
         ? 56
         : 28;
-      const perMachineScanSalary = Math.floor(
-        salary / (hasDoubleAttendance ? 60 : 30)
-      );
+      const perMachineScanSalary = salary / (hasDoubleAttendance ? 60 : 30);
       const machineNotScanned =
         requiredMachineScan - salaryAttendance[monthYear].length;
       const salaryCut = machineNotScanned * perMachineScanSalary;
