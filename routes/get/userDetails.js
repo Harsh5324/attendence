@@ -10,9 +10,6 @@ const userDetails = async (req, resp) => {
 
     const [user] = await getData(null, "employees", `_id = '${id}'`);
 
-    const userSingleMachineSalary = parseFloat(user.singleMachineSalary);
-    const userDubleMachineSalary = parseFloat(user.dubleMachineSalary);
-
     const startDate = new Date(date).setDate(1);
     const endDate = new Date(date);
 
@@ -110,9 +107,16 @@ const userDetails = async (req, resp) => {
 
     Object.keys(salaryAttendance).forEach((monthYear) => {
       const attendanceByDate = {};
+
+      let userSpecificDubleSalary = 0;
+      let userSpecificSingleSalary = 0;
+
       salaryAttendance[monthYear].forEach((attendance) => {
         const date = attendance.date;
         attendanceByDate[date] = (attendanceByDate[date] || 0) + 1;
+
+        userSpecificDubleSalary = attendance.userDubleMachineSalary;
+        userSpecificSingleSalary = attendance.userSingleMachineSalary;
       });
 
       const hasDoubleAttendance = Object.values(attendanceByDate).some(
@@ -120,8 +124,8 @@ const userDetails = async (req, resp) => {
       );
 
       let salary = hasDoubleAttendance
-        ? userDubleMachineSalary
-        : userSingleMachineSalary;
+        ? userSpecificDubleSalary
+        : userSpecificSingleSalary;
 
       const year = parseFloat(monthYear.split(" ")[1]);
       const isFebruary = monthYear.split(" ")[0]?.toUpperCase() === "FEB";
