@@ -171,6 +171,7 @@ const userDetails = async (req, resp) => {
         });
 
       netSalary -= salaryCut + totalAdvance;
+      salary -= salaryCut;
 
       attendances.push({
         monthYear,
