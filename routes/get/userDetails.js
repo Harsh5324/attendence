@@ -132,7 +132,7 @@ const userDetails = async (req, resp) => {
         : userSpecificSingleSalary;
 
       // Fixed per-day salary cut (30,000 ÷ 30)
-      const perDaySalaryCut = 1000;
+      const perDaySalaryCut = salary / 30;
 
       // Total days in the current month
       const [month, year] = monthYear.split(" ");
