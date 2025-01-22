@@ -136,24 +136,31 @@ const userDetails = async (req, resp) => {
       const isLeapYear =
         (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 
-      // const requiredMachineScan = !isFebruary
-      //   ? hasDoubleAttendance
-      //     ? 60
-      //     : 30
-      //   : isLeapYear
-      //   ? hasDoubleAttendance
-      //     ? 58
-      //     : 29
-      //   : hasDoubleAttendance
-      //   ? 56
-      //   : 28;
+      const requiredMachineScan = !isFebruary
+        ? hasDoubleAttendance
+          ? 60
+          : 30
+        : isLeapYear
+        ? hasDoubleAttendance
+          ? 58
+          : 29
+        : hasDoubleAttendance
+        ? 56
+        : 28;
 
-      const requiredMachineScan = hasDoubleAttendance ? 60 : 30;
+      console.log("requiredMachineScan", requiredMachineScan);
 
       const perMachineScanSalary = salary / (hasDoubleAttendance ? 60 : 30);
+      console.log(
+        "🚀 ~ file: userDetails.js:152 ~ Object.keys ~ perMachineScanSalary:",
+        perMachineScanSalary
+      );
       const machineNotScanned =
         requiredMachineScan - salaryAttendance[monthYear].length;
+      console.log("machineNotScanned", machineNotScanned);
+
       const salaryCut = machineNotScanned * perMachineScanSalary;
+      console.log("salaryCut", salaryCut);
 
       let totalAdvance = 0;
 
