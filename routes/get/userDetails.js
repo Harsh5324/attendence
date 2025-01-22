@@ -147,6 +147,8 @@ const userDetails = async (req, resp) => {
         : hasDoubleAttendance
         ? 56
         : 28;
+
+      console.log(requiredMachineScan);
       const perMachineScanSalary = salary / (hasDoubleAttendance ? 60 : 30);
       const machineNotScanned =
         requiredMachineScan - salaryAttendance[monthYear].length;
