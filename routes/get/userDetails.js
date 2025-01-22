@@ -106,18 +106,18 @@ const userDetails = async (req, resp) => {
     const attendances = [];
 
     Object.keys(salaryAttendance).forEach((monthYear) => {
-      if (monthYear == moment(new Date()).format("MMM YYYY")) return;
+      if (monthYear === moment(new Date()).format("MMM YYYY")) return;
 
       const attendanceByDate = {};
 
-      let userSpecificDubleSalary = 0;
+      let userSpecificDoubleSalary = 0;
       let userSpecificSingleSalary = 0;
 
       salaryAttendance[monthYear].forEach((attendance) => {
         const date = attendance.date;
         attendanceByDate[date] = (attendanceByDate[date] || 0) + 1;
 
-        userSpecificDubleSalary = parseFloat(
+        userSpecificDoubleSalary = parseFloat(
           JSON.parse(attendance.salary).dubleMachineSalary
         );
         userSpecificSingleSalary = parseFloat(
@@ -130,25 +130,16 @@ const userDetails = async (req, resp) => {
       );
 
       let salary = hasDoubleAttendance
-        ? userSpecificDubleSalary
+        ? userSpecificDoubleSalary
         : userSpecificSingleSalary;
 
-      const year = parseFloat(monthYear.split(" ")[1]);
-      const isFebruary = monthYear.split(" ")[0]?.toUpperCase() === "FEB";
-      const isLeapYear =
-        (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+      const [month, year] = monthYear.split(" ");
+      const monthIndex = moment().month(month).format("M") - 1; // Convert month name to zero-based index
+      const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
 
-      const requiredMachineScan = !isFebruary
-        ? hasDoubleAttendance
-          ? 60
-          : 30
-        : isLeapYear
-        ? hasDoubleAttendance
-          ? 58
-          : 29
-        : hasDoubleAttendance
-        ? 56
-        : 28;
+      const requiredMachineScan = hasDoubleAttendance
+        ? daysInMonth * 2
+        : daysInMonth;
 
       console.log("requiredMachineScan", requiredMachineScan);
 
@@ -157,8 +148,9 @@ const userDetails = async (req, resp) => {
         "🚀 ~ file: userDetails.js:152 ~ Object.keys ~ perMachineScanSalary:",
         perMachineScanSalary
       );
+
       const machineNotScanned =
-        requiredMachineScan - salaryAttendance[monthYear].length;
+        requiredMachineScan - Object.keys(attendanceByDate).length;
       console.log("machineNotScanned", machineNotScanned);
 
       const salaryCut = machineNotScanned * perMachineScanSalary;
