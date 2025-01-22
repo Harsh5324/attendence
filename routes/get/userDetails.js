@@ -164,7 +164,7 @@ const userDetails = async (req, resp) => {
 
       attendances.push({
         monthYear,
-        salary,
+        salary: Math.floor(salary),
         advance: totalAdvance || undefined,
       });
     });
