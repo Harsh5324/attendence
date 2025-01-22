@@ -133,6 +133,8 @@ const userDetails = async (req, resp) => {
         ? userSpecificDubleSalary
         : userSpecificSingleSalary;
 
+      let netSalary = salary;
+
       // const year = parseFloat(monthYear.split(" ")[1]);
       // const isFebruary = monthYear.split(" ")[0]?.toUpperCase() === "FEB";
       // const isLeapYear =
@@ -168,12 +170,13 @@ const userDetails = async (req, resp) => {
           totalAdvance += parseFloat(item.amount);
         });
 
-      salary -= salaryCut + totalAdvance;
+      netSalary -= salaryCut + totalAdvance;
 
       attendances.push({
         monthYear,
-        salary: Math.floor(salary),
+        netSalary: Math.floor(netSalary),
         advance: totalAdvance || undefined,
+        salary: Math.floor(salary),
       });
     });
 
