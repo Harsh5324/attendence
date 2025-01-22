@@ -121,6 +121,8 @@ const userDetails = async (req, resp) => {
         userSpecificSingleSalary = parseFloat(
           JSON.parse(attendance.salary).singleMachineSalary
         );
+
+        console.log({ userSpecificDubleSalary, userSpecificSingleSalary });
       });
 
       const hasDoubleAttendance = Object.values(attendanceByDate).some(
