@@ -106,16 +106,18 @@ const userDetails = async (req, resp) => {
     const attendances = [];
 
     Object.keys(salaryAttendance).forEach((monthYear) => {
+      if (monthYear == moment(new Date()).format("MMM YYYY")) return;
+
       const attendanceByDate = {};
-      let userSpecificDoubleSalary = 0;
+
+      let userSpecificDubleSalary = 0;
       let userSpecificSingleSalary = 0;
 
-      // Extract attendance and salary details
       salaryAttendance[monthYear].forEach((attendance) => {
         const date = attendance.date;
         attendanceByDate[date] = (attendanceByDate[date] || 0) + 1;
 
-        userSpecificDoubleSalary = parseFloat(
+        userSpecificDubleSalary = parseFloat(
           JSON.parse(attendance.salary).dubleMachineSalary
         );
         userSpecificSingleSalary = parseFloat(
@@ -127,45 +129,54 @@ const userDetails = async (req, resp) => {
         (count) => count === 2
       );
 
-      // Determine the base salary
       let salary = hasDoubleAttendance
-        ? userSpecificDoubleSalary
+        ? userSpecificDubleSalary
         : userSpecificSingleSalary;
 
-      // Total days in the current month
-      const [month, year] = monthYear.split(" ");
-      const totalDaysInMonth = new Date(
-        parseInt(year),
-        new Date(Date.parse(month + " 1")).getMonth() + 1,
-        0
-      ).getDate();
+      const year = parseFloat(monthYear.split(" ")[1]);
+      const isFebruary = monthYear.split(" ")[0]?.toUpperCase() === "FEB";
+      const isLeapYear =
+        (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 
-      // Days not scanned
-      const machineNotScanned =
-        totalDaysInMonth - Object.keys(attendanceByDate).length;
+      const requiredMachineScan = !isFebruary
+        ? hasDoubleAttendance
+          ? 60
+          : 30
+        : isLeapYear
+        ? hasDoubleAttendance
+          ? 58
+          : 29
+        : hasDoubleAttendance
+        ? 56
+        : 28;
 
-      // Fixed per-day salary cut
-      const perDaySalaryCut = salary / 30;
+      console.log("requiredMachineScan", requiredMachineScan);
 
-      // Calculate the salary cut for absent days
-      const salaryCut = machineNotScanned * perDaySalaryCut;
-
+      const perMachineScanSalary = salary / (hasDoubleAttendance ? 60 : 30);
       console.log(
-        `Month: ${monthYear}, Machine Not Scanned: ${machineNotScanned}`
+        "🚀 ~ file: userDetails.js:152 ~ Object.keys ~ perMachineScanSalary:",
+        perMachineScanSalary
       );
-      console.log(`Salary Cut: ₹${salaryCut}`);
+      const machineNotScanned =
+        requiredMachineScan - salaryAttendance[monthYear].length;
+      console.log("machineNotScanned", machineNotScanned);
 
-      // Calculate advances for the month
-      let totalAdvance = advance
-        .filter((i) => i.monthYear === monthYear)
-        .reduce((acc, item) => acc + parseFloat(item.amount), 0);
+      const salaryCut = machineNotScanned * perMachineScanSalary;
+      console.log("salaryCut", salaryCut);
 
-      // Final salary after deductions
+      let totalAdvance = 0;
+
+      advance
+        ?.filter((i) => i.monthYear === monthYear)
+        ?.forEach((item) => {
+          totalAdvance += parseFloat(item.amount);
+        });
+
       salary -= salaryCut + totalAdvance;
 
       attendances.push({
         monthYear,
-        salary: Math.floor(salary), // Round salary to nearest integer
+        salary: Math.floor(salary),
         advance: totalAdvance || undefined,
       });
     });
