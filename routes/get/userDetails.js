@@ -115,8 +115,12 @@ const userDetails = async (req, resp) => {
         const date = attendance.date;
         attendanceByDate[date] = (attendanceByDate[date] || 0) + 1;
 
-        userSpecificDubleSalary = attendance.userDubleMachineSalary;
-        userSpecificSingleSalary = attendance.userSingleMachineSalary;
+        userSpecificDubleSalary = JSON.parse(
+          attendance.salary
+        ).userDubleMachineSalary;
+        userSpecificSingleSalary = JSON.parse(
+          attendance.salary
+        ).userSingleMachineSalary;
       });
 
       const hasDoubleAttendance = Object.values(attendanceByDate).some(
