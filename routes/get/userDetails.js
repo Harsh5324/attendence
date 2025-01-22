@@ -145,7 +145,7 @@ const userDetails = async (req, resp) => {
         totalDaysInMonth - Object.keys(attendanceByDate).length;
 
       // Fixed per-day salary cut
-      const perDaySalaryCut = 1000;
+      const perDaySalaryCut = salary / 30;
 
       // Calculate the salary cut for absent days
       const salaryCut = machineNotScanned * perDaySalaryCut;
