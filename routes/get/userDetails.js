@@ -110,7 +110,7 @@ const userDetails = async (req, resp) => {
       let userSpecificDoubleSalary = 0;
       let userSpecificSingleSalary = 0;
 
-      // Iterate through attendance and calculate salary details
+      // Iterate through attendance and extract salary details
       salaryAttendance[monthYear].forEach((attendance) => {
         const date = attendance.date;
         attendanceByDate[date] = (attendanceByDate[date] || 0) + 1;
@@ -131,6 +131,9 @@ const userDetails = async (req, resp) => {
         ? userSpecificDoubleSalary
         : userSpecificSingleSalary;
 
+      // Fixed per-day salary cut (30,000 ÷ 30)
+      const perDaySalaryCut = 1000;
+
       // Total days in the current month
       const [month, year] = monthYear.split(" ");
       const totalDaysInMonth = new Date(
@@ -139,16 +142,16 @@ const userDetails = async (req, resp) => {
         0
       ).getDate();
 
+      // Days not scanned
       const machineNotScanned =
         totalDaysInMonth - Object.keys(attendanceByDate).length;
 
-      const perDaySalaryCut = salary / totalDaysInMonth; // Fixed daily salary cut
       const salaryCut = machineNotScanned * perDaySalaryCut;
 
       console.log(
         `Month: ${monthYear}, Machine Not Scanned: ${machineNotScanned}`
       );
-      console.log(`Salary Cut: ${salaryCut}`);
+      console.log(`Salary Cut: ₹${salaryCut}`);
 
       // Calculate advances for the month
       let totalAdvance = advance
