@@ -21,13 +21,13 @@ const addAttendence = async (req, resp) => {
 
     const today = new Date().toISOString().split("T")[0];
 
-    const [{ singleMachieSalary, doubleMachieSalary }] = await getData(
+    const [{ singleMachineSalary, dubleMachineSalary }] = await getData(
       null,
       "employees",
       `_id = ${body.employee}`
     );
 
-    body.salary = JSON.stringify({ singleMachieSalary, doubleMachieSalary });
+    body.salary = JSON.stringify({ singleMachineSalary, dubleMachineSalary });
 
     const userAttendances = await getData(
       null,
